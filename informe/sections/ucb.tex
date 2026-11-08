@@ -22,9 +22,9 @@ Definamos la estimación para le media del brazo \(a\):
 \end{equation}
 
 Observemos que
-\begin{equation*}
+\begin{equation}
     \hat{\mu}_t(a) - \mu_a = \frac{1}{n_t(a)}\sum^{n_t(a)}_{s=1}(Y^a_s-\mu_a) = \frac{M^a_{n_t(a)}}{n_t(a)}.
-\end{equation*}
+\end{equation}
 
 Que es precisamente lo que queriamos acotar. Formalmente, nos gustaria que:
 
@@ -38,20 +38,22 @@ Sean
     A_{r} &= \left\{\exists t\le T,\ \exists a \leq K:\left|\hat{\mu}_t(a) - \mu_a\right| \ge r(n_t(a)) \right\}.
 \end{align*}
 
-\begin{align}
+Tenemos que
+
+\begin{align*}
 E_t^a &=\left\{\left|\frac{M^a_{n_t(a)}}{n_t(a)}\right|\ge r(n_t(a))\right\}\\
      &= \bigcup_{n=1}^{t}\left(\{n_t(a)=n\}\cap\left\{\left|\frac{M_n^a}{n}\right|\ge r(n)\right\}\right)\\
      &\subseteq\bigcup_{n=1}^{t}\left\{\left|\frac{M_n^a}{n}\right|\ge r(n)\right\}. \\
      &\subseteq\bigcup_{n=1}^{T}\left\{\left|\frac{M_n^a}{n}\right|\ge r(n)\right\}.
-\end{align}
+\end{align*}
 
 Por Azuma-Hoeffding, como \(M_n\) acotada por intervalos de longitud 1. Tenemos que:
 
 \begin{align}
     P(A_{r}) &= P\left(\bigcup^K_{a=1}\bigcup^T_{t=1} E^a_t\right) \nonumber \nonumber \\
              &\leq P\left( \bigcup^K_{a=1}\bigcup^T_{n=1} \left\{\left|\frac{M_n^a}{n}\right|\ge r(n)\right\}\right) \nonumber \\
-             & \leq \sum^K_{a=1} \sum^T_{n=1} P\left( \left\{\left|\frac{M_n^a}{n}\right|\ge r(n)\right\}\right)\\
-             & \leq \sum^K_{a=1} \sum^T_{n=1} P\left( \left\{\left|M_n^a\right|\ge nr(n)\right\}\right)\\
+             & \leq \sum^K_{a=1} \sum^T_{n=1} P\left( \left\{\left|\frac{M_n^a}{n}\right|\ge r(n)\right\}\right) \nonumber\\
+             & \leq \sum^K_{a=1} \sum^T_{n=1} P\left( \left\{\left|M_n^a\right|\ge nr(n)\right\}\right) \nonumber\\
                 &\leq 2KT \operatorname{exp}(-2nr(n)^2) = \delta
 \end{align}
 
