@@ -1,0 +1,29 @@
+\section{Martingalas y bandidos}
+
+Sea \(Y^a_j\) la recompensa obtenida la \(j\)-esima vez que se eligió el brazo \(a\). Definimos:
+
+\begin{equation} \label{eq:dif_martingala_bandits}
+    D^a_t = Y^a_t - \mu_a \quad \forall t\in \mathbbm{N}
+\end{equation}
+
+Observemos que es una secuencia de diferencia de martingala \(\forall a\). Sea \(\mathcal{F}^a_t = \sigma(Y^a_1, \cdots, Y^a_t )\).
+
+\begin{proof}
+    \begin{align*}
+        \E{D^a_{t+1} | \mathcal{F}^a_t} &= \E{Y^a_{t+1} | \mathcal{F}^a_n} - \mu_a \\
+                                     &= \E{Y^a_{t+1}} - \mu_a \\
+                                    &= \mu_a - \mu_a \\
+                                    &= 0 \qedhere.
+    \end{align*}
+\end{proof}
+
+Luego
+\begin{equation} \label{eq:martingala_bandits}
+    M^a_t = \sum^t_{s=1}(Y^a_s-\mu_a)
+\end{equation}
+
+Es una Martingala. Mide la suma de errores de estimación del brazo a. Si \(N_t(a)\) el numero de visitas al brazo \(a\) hasta tiempo \(t\). Nos gustaria poder controlar simultáneamente, para cada brazo \(a\):
+\[P\left(\left|\frac{M^a_t}{n_t(a)}\right| \geq \varepsilon\right)\].
+
+
+Para eso, introducimos una versión del lema de Hoeffding y el teorema de Azuma-Hoeffding.

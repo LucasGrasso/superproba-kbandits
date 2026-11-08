@@ -1,0 +1,98 @@
+\section{Preeliminares de Proba}
+
+\subsection{Funcion Generadora de Momentos}
+
+\begin{definition}[Funcion generadora de momentos] \label{def:fgm}
+
+\begin{align}
+    M_X(t)&=\E{e^{tX}} \\
+          &=\E{1 + tX + \frac{t^2}{2!}X^2 + \frac{t^3}{3!}X^3 + \cdots} \nonumber \\
+          &= 1 + t\E{X} + \frac{t^2}{2!}\E{X^2} +  \frac{t^3}{3!}\E{X^3} + \cdots. \label{eq:taylormom}
+\end{align}
+
+Esta definida siempre y cuando \(\exists h>0 : \E{e^{tX}}<+\infty \forall t \in (-h,h)\).
+
+\end{definition}
+
+\begin{property}[Generacion de Momentos]\label{obs:genmomentos}
+En \eqref{eq:taylormom} se puede observar como al derivar \(n\) veces, el termino con \(\E{X^n}\) queda constante, y al evaluar \(t=0\) se mueren el resto de terminos. Esto es:
+
+    \begin{equation}
+       \left. \dfrac{d^n}{dt^n} M_X(t) \right|_{t=0}  = \E{X^n}.
+    \end{equation}
+
+\end{property}
+
+\subsection{Funcion Generadora de Cumulantes}
+
+\begin{definition}[Funcion generadora de Cumulantes] \label{def:cgf}
+
+\begin{equation} \label{eq:gencumulantes}
+    K_X(t) = \log\E{e^{tX}}.
+\end{equation}
+
+Esta definida siempre y cuando \(M_X(t)\) lo este.
+\end{definition}
+
+\begin{property}[Generacion de primer y segundo Cumulantes]\label{obs:gencum}
+Derivando \eqref{eq:gencumulantes}, se obtiene que:
+
+
+\begin{align}
+    \frac{d}{dt} K_X(0) &= \E{X}. \\
+    \frac{d^2}{dt^2} K_X(0) &= Var(X).
+\end{align}
+
+\end{property}
+
+\begin{proof}
+    \begin{align}
+    \left. \frac{d}{dt} K_X(t) \right|_{t=0} &= \left. \frac{d}{dt} \operatorname{log} M_X(t) \right|_{t=0} \nonumber \\
+                        &= \left. \frac{M_x'(t)}{M_X(t)}(t) \right|_{t=0} \nonumber\\
+                        &= \E{X} \nonumber.
+\end{align}
+
+\begin{align}
+    \left. \frac{d^2}{dt^2} K_X(t) \right|_{t=0} &= \left. \frac{d}{dt} \frac{M_x'(t)}{M_X(t)} \right|_{t=0} \nonumber \\
+                        &= \left. \frac{M_X(t)M_x''(t) - (M_X'(t))^2}{(M_X(t))^2} \right|_{t=0} \label{eq:dt2KX}\\
+                        &= \E{X^2} - (\E{X})^2 \nonumber \\
+                        &= \Var{X}. \qedhere
+\end{align}
+\end{proof}
+
+\subsection{Momentos y Cumulantes condicionales}
+
+Análogamente, dada una \(\sigma\)-álgebra  \(\mathcal{F}\), podemos definir las funciones generadoras de momentos y cumulantes condicionales.
+
+\begin{definition}[Función generadora de Momentos Condicionales]
+
+    \begin{equation} \label{eq:momentcond}
+    M_X^\mathcal{F}(t) = \E{e^{tX}|\mathcal{F}}.
+    \end{equation}
+
+    Esta definido si \(e^{tX} \in L^1\) (se cumple si \(X\) acotada) y \(\exists h>0 : \E{e^{tX}|\mathcal{F}}<+\infty \forall t \in (-h,h)\).
+\end{definition}
+
+
+\begin{definition}[Función generadora de Cumulantes Condicionales]
+
+\begin{equation} \label{eq:gencumulantescond}
+    K_X^\mathcal{F}(t) = \log\E{e^{tX}|\mathcal{F}}.
+\end{equation}
+
+Esta definida siempre y cuando \(M_X^\mathcal{F}(t)\) lo este.
+\end{definition}
+
+\subsection{Secuencias de diferencias de Martingalas}
+
+\begin{definition}[Secuencia de diferencias de Martingala]
+    Dadas \((X_n)_n\) variables aleatorias, \((D_n)_n\) es una secuencia de diferencias de martingala si 
+
+    \begin{equation}
+        D_i = f(X_1,\cdots,X_i) \quad \E{D_{n+1}|\sigma(X_1,\cdots,X_n)} = 0
+    \end{equation}
+\end{definition}
+
+\begin{observation}[Equivalencia Martingala \(\iff\) Diferencia de Martingalas]
+Dada una martingala \((M_n)_n\), uno puedo construirse una secuencia de diferencia de martingala como \(D_n = M_n - M_{n-1}\). Dada una secuencia de diferencia de martingala \((D_n)_n\), uno puedo construirse una martingala como \(M_0 = 0 \quad M_n = \sum^m_{n=0}D_n\).
+\end{observation}

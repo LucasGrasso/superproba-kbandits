@@ -1,0 +1,46 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{pgfplots}
+\usepackage{amsmath} % Required for \dfrac
+\usepackage{bbm}     % Required for \mathbbm{1}
+\pgfplotsset{compat=1.18}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage{multirow}
+
+\usepackage[ruled]{algorithm2e}
+\SetAlgorithmName{Algoritmo}{Algoritmo}{Índice de algoritmos}
+% Define Spanish logic blocks
+% \SetKwIF{MacroName}{ElseIfMacro}{ElseMacro}{if text}{then text}{else if text}{else text}{end text}
+\SetKwIF{Si}{SinoSi}{Sino}{si}{entonces}{sino si}{si no}{fin si}
+\SetKw{Devolver}{devolver}
+\SetKwFor{Para}{para}{hacer}{fin para}
+\SetKwFor{Mientras}{mientras}{hacer}{fin mientras}
+
+\title{Final SuperProba - K-bandits y Desigualdades de concentracion}
+
+\title{%
+  Final SuperProba \\
+  \large K-bandits y Desigualdades de concentracion
+}
+
+
+\author{Lucas Grasso Ramos}
+
+\input{normalplot}
+\input{theorems}
+\def\D#1#2{\mathcal{D}_#1^{(#2)}}
+\def\E#1{\mathbbm{E}[#1]}
+\def\Var#1{\operatorname{Var}(#1)}
+
+\begin{document}
+
+\maketitle
+
+\input{sections/kbandits}
+\input{sections/preeliminares_proba}
+\input{sections/martingalas_bandidos}
+\input{sections/desigualdades_hoeffding_azuma}
+\input{sections/ucb}
+
+\end{document}

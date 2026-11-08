@@ -1,0 +1,56 @@
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage[many]{tcolorbox}
+\tcbuselibrary{theorems}
+
+% ==========================================
+% 1. DEFINING 'OBSERVATION' (Unboxed)
+% ==========================================
+\theoremstyle{definition}
+\newtheorem{observation}{Observación}[section]
+
+% ==========================================
+% 2. DEFINING 'THEOREM' (Boxed)
+% ==========================================
+\newtcbtheorem[number within=section]{theorem}{Teorema}%
+{
+colback=blue!5!white,
+colframe=blue!75!black,
+fonttitle=\bfseries,
+boxrule=1pt,
+arc=3pt,
+top=2mm, bottom=2mm,
+left=2mm, right=2mm
+}{thm}
+
+% ==========================================
+% 3. DEFINING 'DEFINITION' (Boxed)
+% ==========================================
+\newtheoremstyle{definitionbreak}
+  {\topsep}   % Space above
+  {\topsep}   % Space below
+  {\normalfont}% Body font (normal, non-italic text)
+  {}          % Indent amount
+  {\bfseries} % Theorem head font (bold)
+  {.}         % Punctuation after theorem head (e.g., "Definition 1.1.")
+  {\newline}  % Space after theorem head: this forces the line break!
+  {}          % Theorem head spec (empty means default)
+
+\theoremstyle{definitionbreak} 
+\newtheorem{definition}{Definition}[section]
+
+% ==========================================
+% DEFINING 'PROPERTY' (Unboxed, with Line Break)
+% ==========================================
+\newtheoremstyle{propertybreak}
+  {\topsep}   % Space above
+  {\topsep}   % Space below
+  {\normalfont}% Body font (normal, non-italic text)
+  {}          % Indent amount
+  {\bfseries} % Theorem head font (bold)
+  {.}         % Punctuation after theorem head
+  {\newline}  % Space after theorem head: this forces the line break!
+  {}          % Theorem head spec
+
+\theoremstyle{propertybreak} 
+\newtheorem{property}{Propiedad}[section]

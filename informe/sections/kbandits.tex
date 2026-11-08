@@ -1,0 +1,26 @@
+\section{K-Bandits}
+
+Se tienen \(K\) maquinas tragamonedas, que potencialmente modifican su recompensa en cada momento.\\
+Formalmente, se tienen \(K\) distribuciones \(\{\D{i}{1}, \D{i}{2}, \cdots , \D{i}{T}\}_{i \leq K}\) con soporte asumido en \([0,1]\).
+
+Tirar del brazo (samplear) del brazo \(i\) a tiempo \(t\) te otorga una recompensa \(X_{i,t} \sim \D{i}{t}\).
+Si inicialmente no conoces nada de \(\{\D{i}{1}, \D{i}{2},\cdots, \D{i}{T}\}_{i \leq K}\), ¿Como maximizas tu recompensa esperada para \(T\) tiradas?
+
+Si sampleas un mal numero, no podrías saber si la maquina es mala o si tuviste mala suerte.
+Si asumimos \textbf{distribuciones estacionarias}, habiendo visitado cada maquina una vez, podemos intuitivamente estimar la media de cada distribución como:
+
+\begin{equation}
+    \hat{\mu}_t(a) = \dfrac{\sum^t_{s=1} X_{s,a} \mathbbm{1}_{\{I_s = a\}}}{\sum^t_{s=1} \mathbbm{1}_{\{I_s = a\}}}
+\end{equation}
+
+Pero simplemente tomar la acción greedy o golosa:
+
+\begin{equation}\label{eq:greedy}
+    a_{t+1} = \arg\max_{a \leq K} \hat{\mu}_t(a)
+\end{equation}
+
+no favorece la exploración. ¿Como haces para explorar las maquinas y como explotamos lo que ya sabemos?.
+
+\begin{observation}[$\varepsilon$-Greedy] \label{obs:epsgreedy}
+Para \(1 > \varepsilon \geq 0\), podríamos tomar la accion greedy \eqref{eq:greedy} con probabilidad \(1-\varepsilon\) y cualquier otra accion uniformemente con probabilidad \(\varepsilon\). No indagaremos en algoritmos \(\varepsilon\)-Greedy. Observemos que si \(\varepsilon=0\) recuperamos el algoritmo greedy original.
+\end{observation}

@@ -1,0 +1,43 @@
+\begin{theorem}{Lema de Hoeffding para la funcion generadora de cumulantes condicional}{teo:lema-hoeffding}
+Sea \(\mathcal{F}\) una \(\sigma\)-algebra tal que \(\E{X|\mathcal{F}}=0\) y \(X\) tal que \(a \leq X \leq b\) c.s.
+
+\begin{equation}  \label{eq:hoeffding}
+    K_X^\mathcal{F}(t) \leq \dfrac{t^2(b-a)^2}{8} \quad \forall t>0 
+\end{equation}
+
+\end{theorem}
+
+\begin{proof}
+   Como \(K_X^\mathcal{F}\) esta definida y es analitica (pues \(X\) acotada). Para \(t>0, \exists\xi \in (0,t) \) tal que:
+
+    \begin{align}
+        K_X^\mathcal{F}(t) &= K_X^\mathcal{F}(0) + t\frac{d}{dt}K_X^\mathcal{F}(0) + \frac{t^2}{2}\frac{d^2}{dt^2}K_X^\mathcal{F}(\xi) \nonumber \\
+                         &= \frac{t^2}{2}\frac{d^2}{dt^2}K_X^\mathcal{F}(\xi) \text{ (Pues } \E{X|\mathcal{F}}=0)
+    \end{align}
+
+    Como \(a\leq X\leq b \implies (X-a)(b-X)\geq0 \implies X^2\leq(a+b)X-ab\).
+    \begin{align*}
+        {M_X^{\mathcal F}}''(\xi)
+        &=\E{X^2e^{\xi X}\mid\mathcal F}\\
+        &\leq(a+b) \E{Xe^{\xi X}\mid\mathcal F} -ab\E{e^{\xi X}\mid\mathcal F}\\
+        &=(a+b){M_X^{\mathcal F}}'(\xi)-abM_X^{\mathcal F}(\xi).
+    \end{align*}
+
+     Usando lo observado en \eqref{eq:dt2KX}:
+
+    \begin{align*}
+\frac{d^2}{dt^2} K^\mathcal{F}_X(\xi) &= \frac{M^\mathcal{F}_X(\xi){M^\mathcal{F}_X}''(\xi) - ({M^\mathcal{F}_X}'(\xi))^2}{(M^\mathcal{F}_X(\xi))^2} \\
+                                      &= \frac{{M^\mathcal{F}_X}''(\xi)}{M^\mathcal{F}_X(\xi)} - \left(\frac{{M^\mathcal{F}_X}'(\xi)}{M^\mathcal{F}_X(\xi)} \right)^2 \\
+                                      &\leq (a+b) \frac{{M^\mathcal{F}_X}'(\xi)}{M^\mathcal{F}_X(\xi)} -ab -  \left(\frac{{M^\mathcal{F}_X}'(\xi)}{M^\mathcal{F}_X(\xi)} \right)^2 \\
+                                      &= \frac{(b-a)^2}{4} - \left(\frac{{M^\mathcal{F}_X}'(\xi)}{M^\mathcal{F}_X(\xi)} -\frac{a+b}{2}\right)^2 \\
+                                      &\leq \frac{(b-a)^2}{4}
+    \end{align*}
+
+    Luego,
+
+    \begin{align*}
+         K_X^\mathcal{F}(t) &= \frac{t^2}{2}\frac{d^2}{dt^2}K_X^\mathcal{F}(\xi) \\
+                            &\leq t^2\frac{(b-a)^2}{8} \qedhere
+    \end{align*}
+
+\end{proof}

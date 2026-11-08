@@ -1,0 +1,51 @@
+\begin{theorem}{Desigualdad de Azuma-Hoeffding}{teo:azuma-hoeffding}
+    Sea \((D_n)_n\) una secuencia de diferencia de martingalas respecto a la filtracion \((\mathcal{F}_n)_n\). Si \(\forall i>0, \exists c_i >0 \text{ y } Z_i\) variable aleatoria \(\mathcal{F}_{i-1}\)-medible tal que
+    \[
+        Z_i \leq D_i \leq Z_i + c_i \text{ c.s}
+    \]
+    Luego, \(\forall \epsilon>0, m \in \mathbbm{N}\).
+
+    \begin{align}
+        P\left(\sum^m_{i=1} D_i \geq \varepsilon\right) &\leq \operatorname{exp}\left(\dfrac{-2\varepsilon^2}{\sum^m_{i=1}c_i^2}\right) \\
+        P\left(\sum^m_{i=1} D_i \leq -\varepsilon\right) &\leq \operatorname{exp}\left(\dfrac{-2\varepsilon^2}{\sum^m_{i=1}c_i^2}\right)
+    \end{align}
+
+    ergo,
+
+    \begin{equation}
+        P\left(\left|\sum^m_{i=1} D_i\right| \geq \varepsilon\right) \leq 2\operatorname{exp}\left(\dfrac{-2\varepsilon^2}{\sum^m_{i=1}c_i^2}\right)
+    \end{equation}
+\end{theorem}
+
+\begin{proof}
+    Sea \(M_m = \sum^m_{k=1}D_k\).
+
+    \begin{align*}
+        P(M_n \geq \varepsilon) &= P(e^{tM_n} \geq e^{t\varepsilon})\\
+                                &\leq \dfrac{\E{e^{tM_n}}}{e^{t\varepsilon}} \quad \text{(markov)} \\
+                                &= e^{-t\varepsilon} \E{e^{tM_{n-1}}\E{e^{tD_n} | \mathcal{F}_{n-1}}}  \\
+                                &\leq e^{-t\varepsilon} e^{\frac{t^2c_m^2}{8}}\E{e^{tM_{n-1}}} \quad \eqref{eq:hoeffding} \\
+                                &\leq \cdots \quad \text{Se repite el procedimiento para } \E{e^{tM_{n-1}}} \\
+                                &\leq \operatorname{exp}\left(-t\varepsilon +\frac{t^2\sum^n_{i=1}c_i^2}{8}\right) \quad \text{pues } \E{e^0}=1
+    \end{align*}
+
+    Podemos ajustar la cota minizando el argumento de la exponencial. Esto es el método de acotamiento de Chernoff.
+
+    \begin{align*}
+        f(t) &= -t\varepsilon + t^2\frac{\sum^n_{i=1}c_i^2}{8} \\
+        f'(t) &= -\varepsilon + t\frac{\sum^n_{i=1}c_i^2}{4} \\
+        f''(t) &= \frac{\sum^n_{i=1}c_i^2}{4} > 0
+    \end{align*}
+
+    Luego \(t=\dfrac{4\epsilon}{\sum^n_{i=1}c_i^2}\) es mínimo global de \(f\). Sustituyendo arriba se obtiene:
+    \begin{align*}
+        P(M_n \geq \varepsilon)  &\leq \operatorname{exp}\left(-\frac{4\epsilon^2}{\sum^n_{i=1}c_i^2} +\frac{(\frac{4\epsilon}{\sum^n_{i=1}c_i^2})^2\sum^n_{i=1}c_i^2}{8}\right) \\
+                                &= \operatorname{exp}\left(-\frac{4\epsilon^2}{\sum^n_{i=1}c_i^2} + \frac{2\epsilon^2}{\sum^n_{i=1}c_i^2}\right) \\
+                                &= \operatorname{exp}\left(-\frac{2\epsilon^2}{\sum^n_{i=1}c_i^2}\right) \\
+    \end{align*}
+
+    La segunda desigualdad se prueba facilmente tomando \(W_i = -D_i\).
+    \begin{align*}
+        P(\sum^m_{i=1} V_i \leq -\varepsilon) =  P(\sum^m_{i=1} w_i \geq \varepsilon) \leq \operatorname{exp}\left(-\frac{2\epsilon^2}{\sum^n_{i=1}c_i^2}\right) \quad \qedhere.
+    \end{align*}
+\end{proof}

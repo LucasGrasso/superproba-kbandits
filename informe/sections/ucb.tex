@@ -1,0 +1,121 @@
+\section{Algoritmos UCB}
+
+Recordando las ecuaciones \eqref{eq:dif_martingala_bandits} y \eqref{eq:martingala_bandits}
+
+\begin{equation*}
+    D^a_t = Y^a_t - \mu_a \quad  M^a_t = \sum^t_{s=1}(Y^a_s-\mu_a)
+\end{equation*}
+
+Como el soporte de las distribuciones es \([0,1]\), se tendra que:
+
+\begin{equation}
+    -\mu_a \leq Y^a_j - \mu_a \leq 1 - \mu_a
+\end{equation}
+
+Nos gustaría encontrar un radio \(r(n)\) tal que la probabilidad de que algunas de nuestras estimaciones falle sea como mucho \(\delta\).
+Hay una sutileza, \(n_t(a)\) es aleatorio y ademas depende del algoritmo elegido.
+
+Definamos la estimación para le media del brazo \(a\):
+
+\begin{equation}\label{eq:mu_hat}
+    \hat{\mu}_t(a) = \frac{1}{n_t(a)}\sum^{n_t(a)}_{s=1}Y^a_s.
+\end{equation}
+
+Observemos que
+\begin{equation*}
+    \hat{\mu}_t(a) - \mu_a = \frac{1}{n_t(a)}\sum^{n_t(a)}_{s=1}(Y^a_s-\mu_a) = \frac{M^a_{n_t(a)}}{n_t(a)}.
+\end{equation*}
+
+Que es precisamente lo que queriamos acotar. Formalmente, nos gustaria que:
+
+\begin{equation}
+P\left(\exists t\le T,\ \exists a \leq K:\left|\hat{\mu}_t(a) - \mu_a\right| \ge r(n_t(a)) \right) \leq \delta.
+\end{equation}
+
+Sean
+\begin{align*}
+    E^a_t &= \{|\hat{\mu}_t(a)-\mu_a| \geq r(n_t(a))\}. \\
+    A_{r} &= \left\{\exists t\le T,\ \exists a \leq K:\left|\hat{\mu}_t(a) - \mu_a\right| \ge r(n_t(a)) \right\}.
+\end{align*}
+
+\begin{align}
+E_t^a &=\left\{\left|\frac{M^a_{n_t(a)}}{n_t(a)}\right|\ge r(n_t(a))\right\}\\
+     &= \bigcup_{n=1}^{t}\left(\{n_t(a)=n\}\cap\left\{\left|\frac{M_n^a}{n}\right|\ge r(n)\right\}\right)\\
+     &\subseteq\bigcup_{n=1}^{t}\left\{\left|\frac{M_n^a}{n}\right|\ge r(n)\right\}. \\
+     &\subseteq\bigcup_{n=1}^{T}\left\{\left|\frac{M_n^a}{n}\right|\ge r(n)\right\}.
+\end{align}
+
+Por Azuma-Hoeffding, como \(M_n\) acotada por intervalos de longitud 1. Tenemos que:
+
+\begin{align}
+    P(A_{r}) &= P\left(\bigcup^K_{a=1}\bigcup^T_{t=1} E^a_t\right) \nonumber \nonumber \\
+             &\leq P\left( \bigcup^K_{a=1}\bigcup^T_{n=1} \left\{\left|\frac{M_n^a}{n}\right|\ge r(n)\right\}\right) \nonumber \\
+             & \leq \sum^K_{a=1} \sum^T_{n=1} P\left( \left\{\left|\frac{M_n^a}{n}\right|\ge r(n)\right\}\right)\\
+             & \leq \sum^K_{a=1} \sum^T_{n=1} P\left( \left\{\left|M_n^a\right|\ge nr(n)\right\}\right)\\
+                &\leq 2KT \operatorname{exp}(-2nr(n)^2) = \delta
+\end{align}
+
+Despejando para \(r(n)\) obtenemos:
+
+\begin{align}
+    \operatorname{exp}(-2nr(n)^2) &= \dfrac{\delta}{2KT}  \nonumber \\
+    -2nr(n)^2  &= \operatorname{log}\left(\dfrac{\delta}{2KT}\right) \nonumber \\
+    nr(n)^2 &=  \dfrac{-\operatorname{log}\left(\dfrac{\delta}{2KT}\right)}{2} \nonumber \\
+    r(n) &=  \sqrt{\dfrac{\operatorname{log}\left(\dfrac{2KT}{\delta}\right)}{2n}} \label{eq:uppercb}
+\end{align}
+
+Ya construimos intervalos de confianza que, con probabilidad al menos \(1-\delta\), contienen simultáneamente las verdaderas medias de todos los brazos, para todos los instantes hasta \(T\).
+
+¿Cómo utilizamos esta información para decidir qué brazo seleccionar?
+
+Una posibilidad sería elegir el brazo con mayor media empírica, pero esto no favorece la exploración. Otra alternativa es considerar que cada brazo podría tener una media tan alta como el extremo superior de su intervalo de confianza. Esta es la idea detras de el algoritmo \textbf{UCB} (\textit{Upper Confidence Bound}), actuar de manera optimista frente a la incertidumbre.
+
+\begin{equation}
+    a_{t+1}\in\arg\max_{a\le K} \left\{\hat\mu_t(a)+r(n_t(a))\right\}
+\end{equation}
+
+\begin{algorithm}[H]
+\caption{Algoritmo UCB}
+\KwIn{\(T \in \mathbbm{N} \quad \delta \in(0,1)\)}
+
+\(Y^1_1 \sim D_1, \cdots Y^K_1 \sim D_K \)\;
+\(R \gets \sum^K_{a=1} Y^a_1\)\;
+\(\hat{\mu} \gets (Y^1_1, \cdots Y^K_1)\)\;
+\(n \gets (1, \cdots, 1)\) \;
+\Para{\(t \leq T\)}{
+    \(a_{t+1} \in \arg\max_{a\le K} \left\{ \hat{\mu}_t(a) + \sqrt{\dfrac{\operatorname{log}\left(\dfrac{2KT}{\delta}\right)}{2n(a)}} \right\}\)\;
+    \(n(a_{t+1}) \gets n(a_{t+1}) + 1\)\;
+    \(Y^{a_{t+1}}_{n(a_{t+1})} \sim D_{a_{t+1}}\)\;
+    \(R \gets R + Y^{a_{t+1}}_{n(a_{t+1})}\)\;
+    \(\hat{\mu}(a_{t+1}) \gets \hat{\mu}(a_{t+1}) +\dfrac{Y^{a_{t+1}}_{n(a_{t+1})} - \hat{\mu}(a_{t+1})}{n(a_{t+1})}\)\;
+}
+\end{algorithm}
+
+Vamos a demostrar que, con alta probabilidad, la cantidad de veces que UCB elige un brazo subóptimo está acotada.
+
+Sea \(a_* = \arg\max_{a\leq K} \mu_a\), suponiendo que UCB selecciona el brazo \(a\) en el instante \(t+1\):
+\[
+\begin{aligned}
+\mu_{a^*}
+&\le \hat\mu_t(a^*)+r(n_t(a^*))\\
+&\le \hat\mu_t(a)+r(n_t(a)) \quad \text{(pues UCB tomo esta acción)}\\
+&\le \mu_a+2r(n_t(a)) \quad (|\hat\mu_t(a)-\mu_a|\le r(n_t(a)) \implies \hat\mu_t(a)\le\mu_a+r(n_t(a))).
+\end{aligned}
+\]
+
+Luego
+\begin{equation}
+\mu_{a_*} - \mu_a \leq 2r(n_t(a)) \implies n_t(a) \le \frac{2\log(2KT/\delta)}{(\mu_{a_*} - \mu_a)^2}
+\end{equation}
+
+Por lo tanto, la proporción de veces que seleccionamos un brazo estrictamente subóptimo satisface que para todo \(\varepsilon >0, \exists T_0 \in \mathbbm{N}\) tal que
+
+\begin{equation}
+    \forall T\geq T_0,\quad P\left(\frac{n_T(a)}{T}\leq\varepsilon\right) \geq1-\delta.
+\end{equation}
+
+Esto justifica matemáticamente la estrategia optimista
+de UCB: los brazos poco explorados reciben una mayor
+cota superior, pero a medida que acumulamos
+observaciones, la incertidumbre disminuye y los
+brazos subóptimos dejan de resultar competitivos.
