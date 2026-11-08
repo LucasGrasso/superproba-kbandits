@@ -1,3 +1,4 @@
+[![Informe](https://img.shields.io/badge/Informe-b31b1b.svg)](./informe/final_superproba.pdf)
 # Final de Super Proba
 
 ## K-bandits y desigualdades de conentracion
