@@ -31,6 +31,9 @@ begin
 	μ = mean.(dists)
 end
 
+# ╔═╡ ca13f2e3-b2c2-49b1-848e-369a8727c42b
+a_max = argmax(μ)
+
 # ╔═╡ fb2f7960-891f-4f58-ab64-b3179fa4e5d4
 let
     panels = [
@@ -52,28 +55,31 @@ end
 # ╔═╡ f403f106-4f71-487e-a779-b87b5f26eec9
 @bind δ Slider(0.001:0.001:1, default=0.05, show_value=true)
 
-# ╔═╡ cfb6209f-29e3-4cb0-8f7f-7bfd58c0af16
+# ╔═╡ 469f51a5-15c2-455d-a7f1-62f3996eb83c
 begin
-	visits = [1 for _ in 1:K]
+	visits = ones(Int, K)
 	μ̂ = [rand(d) for d in dists]
-end
-
-# ╔═╡ c5a0b00c-61e7-4b37-9c18-f1737bf8a8c3
-begin
 	μ̂_history = Matrix{Float64}(undef, T + 1, K)
 	μ̂_history[1, :] = μ̂
+
+	regret_history = zeros(T + 1)
+	regret_history[1] = K * μ[a_max] - sum(visits .* μ̂)
+	
+	for t in 1:T
+		UCBS = sqrt.(log(2*K*T/δ) ./ (2 .* visits))
+		action = argmax(μ̂ .+ UCBS)
+		Xₜ = rand(dists[action])
+		
+		visits[action] += 1
+		μ̂[action] += (Xₜ - μ̂[action]) / visits[action]
+
+		regret_history[t + 1] = (K + t) * μ[a_max] - sum(visits .* μ̂)
+		μ̂_history[t + 1, :] = μ̂
+	end
 end
 
-# ╔═╡ 469f51a5-15c2-455d-a7f1-62f3996eb83c
-for t in 1:T
-	UCBS = sqrt.(log(2*K*T/δ) ./ (2 .* visits))
-	action = argmax(μ̂ .+ UCBS)
-	Xₜ = rand(dists[action])
-	
-	visits[action] += 1
-	μ̂[action] += (Xₜ - μ̂[action]) / visits[action]
-	μ̂_history[t + 1, :] = μ̂
-end
+# ╔═╡ c0435530-9aa3-4206-92f6-e5ee87194399
+R = sum(visits .* μ̂)
 
 # ╔═╡ 1c418e89-ea92-436a-ae35-fe1dd4cf1c33
 let
@@ -102,6 +108,29 @@ let
             linestyle=:dash,
             label="μ_$a")
     end
+
+    p
+end
+
+# ╔═╡ e252477d-9bf5-465f-a528-8c5084ed645b
+let
+    n = K .+ (0:T)
+    optimal_reward = n .* μ[a_max]
+    collected_reward = optimal_reward .- regret_history
+
+    p = plot(n, collected_reward,
+        label="Recompensa acumulada de UCB",
+        xlabel="T",
+        ylabel="Recompensa acumulada",
+        linewidth=2,
+        legend=:topleft
+            )
+
+    plot!(p, n, optimal_reward,
+        label="Recompensa óptima esperada",
+        color=:black,
+        linestyle=:dash,
+        linewidth=2)
 
     p
 end
@@ -1387,12 +1416,13 @@ version = "1.13.0+0"
 # ╠═369a0191-71b9-401b-989b-981c4f3264c9
 # ╠═52c29f42-9895-4648-b36f-5c8b5a387c4f
 # ╠═7c03c68d-7955-46a7-9d98-cdd6945c108b
+# ╠═ca13f2e3-b2c2-49b1-848e-369a8727c42b
 # ╠═fb2f7960-891f-4f58-ab64-b3179fa4e5d4
 # ╠═85a7982b-dc5b-4111-9597-c53889e96660
 # ╠═f403f106-4f71-487e-a779-b87b5f26eec9
-# ╠═cfb6209f-29e3-4cb0-8f7f-7bfd58c0af16
-# ╠═c5a0b00c-61e7-4b37-9c18-f1737bf8a8c3
 # ╠═469f51a5-15c2-455d-a7f1-62f3996eb83c
+# ╠═c0435530-9aa3-4206-92f6-e5ee87194399
 # ╠═1c418e89-ea92-436a-ae35-fe1dd4cf1c33
+# ╠═e252477d-9bf5-465f-a528-8c5084ed645b
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
