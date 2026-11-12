@@ -1,0 +1,52 @@
+\begin{theorem}{Desigualdad de McDiarmid (\cite{mcdiarmid1989method})}{teo:mcdiarmid}
+	Sea \(X_1, \ldots, X_n\) variables aleatorias independientes y \(f: \mathcal{X}^n \to \mathbbm{R}\) una función tal que para cada \(i \in \{1, \ldots, n\}\) y
+	puntos \(x_1, \ldots, x_n, x_i' \in \mathcal{X}\) se cumple que:
+
+	\begin{equation}\label{eq:estabilidad_mcdiarmid}
+		\left| f(x_1, \ldots, x_i, \ldots, x_n) - f(x_1, \ldots, x_i', \ldots, x_n) \right| \leq c_i
+	\end{equation}
+
+	Luego, si \(f(S) = f(X_1, \ldots, X_n)\), luego \(\forall \varepsilon > 0\):
+
+	\begin{align}
+		P\left( f(S) - \E{f(S)} \geq \varepsilon \right)  & \leq \exp\left( -\frac{2\varepsilon^2}{\sum_{i=1}^n c_i^2} \right) \\
+		P\left( f(S) - \E{f(S)} \leq -\varepsilon \right) & \leq \exp\left( -\frac{2\varepsilon^2}{\sum_{i=1}^n c_i^2} \right)
+	\end{align}
+
+\end{theorem}
+
+\begin{proof}
+	Definamos la secuencia de diferencia de martingalas \(V_k\) como:
+
+	\begin{align}
+		V_k & = \E{f(S)|X_1, \ldots, X_k} - \E{f(S)|X_1, \ldots, X_{k-1}} \\
+		V   & = f(S) - \E{f(S)} = \sum_{i=1}^n V_k
+	\end{align}
+
+	\((V_k)\) es una secuencia de martingalas, ya que:
+	\[
+		\E{\E{V|X_1, \cdots, X_{k+1}}|X_1, \cdots, X_k} = \E{V|X_1, \cdots, X_k}
+	\]
+
+	Ademas observemos que como \(\E{f(S)}\) constante:
+
+	\begin{equation}
+		V_k = \E{f(S)|X_1, \ldots, X_k} - \E{f(S)|X_1, \ldots, X_{k-1}}
+	\end{equation}
+
+	Luego, podemos acotar \(V_k\) de la siguiente manera:
+
+	\begin{align}
+		U_k & = \sup_x \E{f(S)|X_1, \ldots, X_{k-1}, X_k = x} - \E{f(S)|X_1, \ldots, X_{k-1}} \\
+		L_k & = \inf_x \E{f(S)|X_1, \ldots, X_{k-1}, X_k = x} - \E{f(S)|X_1, \ldots, X_{k-1}}
+	\end{align}
+
+	Que por la ecuacion \ref{eq:estabilidad_mcdiarmid} se cumple que
+
+	\begin{equation*}
+		U_k - L_k = \sup_{x,x'} \E{f(S)|X_1, \ldots, X_{k-1}, X_k = x} - \E{f(S)|X_1, \ldots, X_{k-1}, X_k = x'} \leq c_k.
+	\end{equation*}
+
+	Luego, aplicando la desigualdad de Azuma-Hoeffding a \((V_k)\) obtenemos el resultado deseado. \qedhere
+
+\end{proof}

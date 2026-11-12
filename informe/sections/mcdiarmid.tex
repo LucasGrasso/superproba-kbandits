@@ -1,0 +1,30 @@
+\section{Desigualdad de McDiarmid}
+
+¿Como hariamos ahora para estimar funciones de las muestras? 
+
+Por ejemplo, si querriamos:
+
+\[
+f(X) = \max_{i} \hat{\mu}_i
+\]
+
+¿Que tan bien lo estariamos haciendo?
+
+Observemos que si cambiamos una única observación \(X_j^a\) por otro valor \(X_j^{a\prime}\in[0,1]\).
+
+La media empírica del brazo \(a\) cambia a lo sumo
+\[
+|\hat\mu(a)-\hat\mu'((a)|
+=
+\frac{|X_j^a-X_j^{a\prime}|}{n}
+\le\frac1n.
+\]
+
+Las medias de los demás brazos permanecen iguales. Usando desigualdad triangular obtenemos
+\[
+|f(x)-f(x')|\le\frac{1}{n}.
+\]
+
+Esto motiva el metodo de las diferencias acotadas de McDiarmid, que nos permite acotar la probabilidad de que una función de variables aleatorias independientes se desvíe de su valor esperado.
+
+\input{theorems/mcdiarmid}
