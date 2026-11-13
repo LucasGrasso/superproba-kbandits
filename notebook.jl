@@ -19,6 +19,11 @@ end
 # ╔═╡ 2550fcee-da05-11f1-1349-05dd7588d36e
 using PlutoUI, Distributions, Plots, Random
 
+# ╔═╡ e0713f09-95c1-4d1e-862e-ab6cee9dff50
+md"""
+# Algoritmos UCB en K-bandits
+"""
+
 # ╔═╡ 369a0191-71b9-401b-989b-981c4f3264c9
 Random.seed!(42)
 
@@ -32,7 +37,10 @@ begin
 end
 
 # ╔═╡ ca13f2e3-b2c2-49b1-848e-369a8727c42b
-a_max = argmax(μ)
+begin
+	a_max = argmax(μ)
+	a_min = argmin(μ)
+end
 
 # ╔═╡ fb2f7960-891f-4f58-ab64-b3179fa4e5d4
 let
@@ -64,9 +72,11 @@ begin
 
 	regret_history = zeros(T + 1)
 	regret_history[1] = K * μ[a_max] - sum(visits .* μ̂)
+	pseudo_regret_history = zeros(T + 1)
+	pseudo_regret_history[1] = sum(μ[a_max] .- μ)
 	
 	for t in 1:T
-		UCBS = sqrt.(log(2*K*T/δ) ./ (2 .* visits))
+		UCBS = sqrt.(log(2*K*(T+1)/δ) ./ (2 .* visits))
 		action = argmax(μ̂ .+ UCBS)
 		Xₜ = rand(dists[action])
 		
@@ -74,6 +84,7 @@ begin
 		μ̂[action] += (Xₜ - μ̂[action]) / visits[action]
 
 		regret_history[t + 1] = (K + t) * μ[a_max] - sum(visits .* μ̂)
+		pseudo_regret_history[t + 1] = pseudo_regret_history[t] + μ[a_max] - μ[action]
 		μ̂_history[t + 1, :] = μ̂
 	end
 end
@@ -83,32 +94,37 @@ R = sum(visits .* μ̂)
 
 # ╔═╡ 1c418e89-ea92-436a-ae35-fe1dd4cf1c33
 let
-    colors = palette(:tab20)
+    colors = ["#0072B2", "#D55E00"]
 
     p = plot(
-        xlabel = "Tiempo",
-        ylabel = "Recompensa esperada",
+        xlabel = "Tiradas adicionales (t)",
+        ylabel = "Media de recompensa",
         title = "UCB - Convergencia de μ̂",
-        legend = :outerright
+        legend = :outerright,
+        size = (900, 450),
+        margin = 5 * Plots.mm,
+        dpi = 180
     )
 
-    for a in 1:K
-        c = colors[mod1(a, length(colors))]
+    for (i, a) in enumerate(unique([a_max, a_min]))
+        c = colors[i]
+        role = a_max == a_min ? "único" : a == a_max ? "mejor" : "peor"
 
         plot!(p, 0:T, μ̂_history[:, a],
             color=c,
-            linealpha=0.75,
-            linewidth=1,
-            label="μ̂_$a")
+            linewidth=1.5,
+            label="μ̂ $role (a=$a)")
 
         hline!(p, [μ[a]],
             color=c,
-            linealpha=1.0,
             linewidth=1.5,
             linestyle=:dash,
-            label="μ_$a")
+            label="μ $role (a=$a)")
     end
 
+    plot_dir = joinpath(relpath(@__DIR__), "plots")
+    mkpath(plot_dir)
+    savefig(p, joinpath(plot_dir, "estimator_convergence.png"))
     p
 end
 
@@ -118,20 +134,41 @@ let
     optimal_reward = n .* μ[a_max]
     collected_reward = optimal_reward .- regret_history
 
-    p = plot(n, collected_reward,
-        label="Recompensa acumulada de UCB",
-        xlabel="T",
+    reward_plot = plot(n, collected_reward,
+        label="UCB (observada)",
+        title="Recompensa acumulada",
         ylabel="Recompensa acumulada",
+        color="#0072B2",
         linewidth=2,
         legend=:topleft
-            )
+    )
 
-    plot!(p, n, optimal_reward,
-        label="Recompensa óptima esperada",
+    plot!(reward_plot, n, optimal_reward,
+        label="Siempre el mejor brazo (esperada)",
         color=:black,
         linestyle=:dash,
         linewidth=2)
 
+    regret_plot = plot(n, pseudo_regret_history,
+        title="Costo esperado de las decisiones",
+        ylabel="Pseudo-regret acumulado",
+        color="#D55E00",
+        linewidth=2,
+        fillrange=0,
+        fillalpha=0.1,
+        legend=false)
+
+    p = plot(reward_plot, regret_plot,
+        layout=(2, 1),
+        link=:x,
+        xlabel="Tiradas totales (K + t)",
+        size=(900, 700),
+        margin=5 * Plots.mm,
+        dpi=180)
+
+    plot_dir = joinpath(relpath(@__DIR__), "plots")
+    mkpath(plot_dir)
+    savefig(p, joinpath(plot_dir, "acc_reward.png"))
     p
 end
 
@@ -1412,6 +1449,7 @@ version = "1.13.0+0"
 """
 
 # ╔═╡ Cell order:
+# ╠═e0713f09-95c1-4d1e-862e-ab6cee9dff50
 # ╠═2550fcee-da05-11f1-1349-05dd7588d36e
 # ╠═369a0191-71b9-401b-989b-981c4f3264c9
 # ╠═52c29f42-9895-4648-b36f-5c8b5a387c4f
