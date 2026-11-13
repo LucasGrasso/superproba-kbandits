@@ -57,7 +57,17 @@ Por Azuma-Hoeffding, pues los incrementos de \(M_n^a\) están en intervalos de l
         \exp\left(-2nr(n)^2\right).
 \end{align}
 
-Elegimos cada sumando exponencial igual a \(\delta/[2K(T+1)]\), es decir,
+Elegimos cada sumando exponencial igual a \(\delta/[2K(T+1)]\). Despejando, para \(n\geq1\):
+\begin{align*}
+    \exp\left(-2nr(n)^2\right)
+    &=\frac{\delta}{2K(T+1)},\\
+    -2nr(n)^2
+    &=\log\left(\frac{\delta}{2K(T+1)}\right),\\
+    r(n)^2
+    &=-\frac{1}{2n}\log\left(\frac{\delta}{2K(T+1)}\right)
+      =\frac{\log(2K(T+1)/\delta)}{2n}.
+\end{align*}
+Tomando la raíz positiva, obtenemos
 \begin{equation}\label{eq:uppercb}
     r(n)=\sqrt{\frac{\log(2K(T+1)/\delta)}{2n}}.
 \end{equation}
@@ -122,3 +132,4 @@ de UCB: los brazos poco explorados reciben una mayor
 cota superior, pero a medida que acumulamos
 observaciones, la incertidumbre disminuye y los
 brazos subóptimos dejan de resultar competitivos.
+UCB alcanza el orden logarítmico óptimo del regret esperado \citep{lai1985asymptotically}, aunque nuestra cota no demuestra optimalidad de la constante principal.
