@@ -30,7 +30,7 @@ Para acceder al informe o al repositorio clickear los botones de arriba.
 """
 
 # ╔═╡ 369a0191-71b9-401b-989b-981c4f3264c9
-Random.seed!(42)
+seed = 42
 
 # ╔═╡ c0502291-6074-481b-a962-4f326c2e5740
 md"""
@@ -38,11 +38,18 @@ Aqui se puede modificar la cantidad de distribuciones.
 """
 
 # ╔═╡ 52c29f42-9895-4648-b36f-5c8b5a387c4f
-@bind K Slider(1:20, default=5, show_value=true)
+md"
+**K:**
+
+$@bind K Slider(1:20, default=5, show_value=true)
+"
+
 
 # ╔═╡ 7c03c68d-7955-46a7-9d98-cdd6945c108b
 begin
-	dists = [truncated(Normal(rand(), rand() + 0.1), 0, 1) for _ in 1:K]
+	dists = let rng = Xoshiro(seed)
+		[truncated(Normal(rand(rng), rand(rng) + 0.1), 0, 1) for _ in 1:K]
+	end
 	μ = mean.(dists)
 end
 
@@ -73,15 +80,23 @@ Aqui se pueden modificar la cantidad de tiradas adicionales y el nivel de confia
 """
 
 # ╔═╡ 85a7982b-dc5b-4111-9597-c53889e96660
-@bind T Slider(1000:10000, default=5000, show_value=true)
+md"
+**T:**
+
+$(@bind T Slider(1000:10000, default=5000, show_value=true))
+"
 
 # ╔═╡ f403f106-4f71-487e-a779-b87b5f26eec9
-@bind δ Slider(0.001:0.001:1, default=0.05, show_value=true)
+md"
+**δ:**
+
+$@bind δ Slider(0.001:0.001:1, default=0.05, show_value=true)
+"
 
 # ╔═╡ 469f51a5-15c2-455d-a7f1-62f3996eb83c
-begin
+visits, μ̂, μ̂_history, regret_history, pseudo_regret_history = let rng = Xoshiro(seed + 1)
 	visits = ones(Int, K)
-	μ̂ = [rand(d) for d in dists]
+	μ̂ = [rand(rng, d) for d in dists]
 	μ̂_history = Matrix{Float64}(undef, T + 1, K)
 	μ̂_history[1, :] = μ̂
 
@@ -93,7 +108,7 @@ begin
 	for t in 1:T
 		UCBS = sqrt.(log(2*K*(T+1)/δ) ./ (2 .* visits))
 		action = argmax(μ̂ .+ UCBS)
-		Xₜ = rand(dists[action])
+		Xₜ = rand(rng, dists[action])
 		
 		visits[action] += 1
 		μ̂[action] += (Xₜ - μ̂[action]) / visits[action]
@@ -102,6 +117,7 @@ begin
 		pseudo_regret_history[t + 1] = pseudo_regret_history[t] + μ[a_max] - μ[action]
 		μ̂_history[t + 1, :] = μ̂
 	end
+	(visits, μ̂, μ̂_history, regret_history, pseudo_regret_history)
 end
 
 # ╔═╡ c0435530-9aa3-4206-92f6-e5ee87194399
@@ -1477,13 +1493,13 @@ version = "1.13.0+0"
 # ╠═2550fcee-da05-11f1-1349-05dd7588d36e
 # ╟─369a0191-71b9-401b-989b-981c4f3264c9
 # ╟─c0502291-6074-481b-a962-4f326c2e5740
-# ╠═52c29f42-9895-4648-b36f-5c8b5a387c4f
+# ╟─52c29f42-9895-4648-b36f-5c8b5a387c4f
 # ╠═7c03c68d-7955-46a7-9d98-cdd6945c108b
 # ╟─ca13f2e3-b2c2-49b1-848e-369a8727c42b
 # ╟─fb2f7960-891f-4f58-ab64-b3179fa4e5d4
 # ╟─1d3b9708-6594-48ab-8a3f-2f59150b76e1
-# ╠═85a7982b-dc5b-4111-9597-c53889e96660
-# ╠═f403f106-4f71-487e-a779-b87b5f26eec9
+# ╟─85a7982b-dc5b-4111-9597-c53889e96660
+# ╟─f403f106-4f71-487e-a779-b87b5f26eec9
 # ╠═469f51a5-15c2-455d-a7f1-62f3996eb83c
 # ╟─c0435530-9aa3-4206-92f6-e5ee87194399
 # ╟─1c418e89-ea92-436a-ae35-fe1dd4cf1c33
