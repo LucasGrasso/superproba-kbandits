@@ -50,27 +50,22 @@ E_t^a &=\left\{\left|\frac{M^a_{n_t(a)}}{n_t(a)}\right|\ge r(n_t(a))\right\}\\
 Por Azuma-Hoeffding, pues los incrementos de \(M_n^a\) están en intervalos de longitud 1:
 
 \begin{align}
-    P(A_r)
-    &\leq \sum_{a=1}^K\sum_{n=1}^{T+1}
-        P\left(|M_n^a|\geq nr(n)\right) \nonumber\\
-    &\leq 2\sum_{a=1}^K\sum_{n=1}^{T+1}
-        \exp\left(-2nr(n)^2\right).
+    P(A_{r}) &= P\left(\bigcup^K_{a=1}\bigcup^T_{t=0} E^a_t\right) \nonumber \\
+             &\leq P\left( \bigcup^K_{a=1}\bigcup^{T+1}_{n=1} \left\{\left|\frac{M_n^a}{n}\right|\ge r(n)\right\}\right) \nonumber \\
+             & \leq \sum^K_{a=1} \sum^{T+1}_{n=1} P\left( \left\{\left|\frac{M_n^a}{n}\right|\ge r(n)\right\}\right) \nonumber\\
+             & \leq \sum^K_{a=1} \sum^{T+1}_{n=1} P\left( \left\{\left|M_n^a\right|\ge nr(n)\right\}\right) \nonumber\\
+                &\leq 2\sum^K_{a=1}\sum^{T+1}_{n=1}\operatorname{exp}(-2nr(n)^2).
 \end{align}
 
-Elegimos cada sumando exponencial igual a \(\delta/[2K(T+1)]\). Despejando, para \(n\geq1\):
-\begin{align*}
-    \exp\left(-2nr(n)^2\right)
-    &=\frac{\delta}{2K(T+1)},\\
-    -2nr(n)^2
-    &=\log\left(\frac{\delta}{2K(T+1)}\right),\\
-    r(n)^2
-    &=-\frac{1}{2n}\log\left(\frac{\delta}{2K(T+1)}\right)
-      =\frac{\log(2K(T+1)/\delta)}{2n}.
-\end{align*}
-Tomando la raíz positiva, obtenemos
-\begin{equation}\label{eq:uppercb}
-    r(n)=\sqrt{\frac{\log(2K(T+1)/\delta)}{2n}}.
-\end{equation}
+Elegimos cada sumando exponencial igual a \(\delta/[2K(T+1)]\). Despejando para \(r(n)\) obtenemos:
+
+\begin{align}
+    \operatorname{exp}(-2nr(n)^2) &= \dfrac{\delta}{2K(T+1)}  \nonumber \\
+    -2nr(n)^2  &= \operatorname{log}\left(\dfrac{\delta}{2K(T+1)}\right) \nonumber \\
+    nr(n)^2 &=  \dfrac{-\operatorname{log}\left(\dfrac{\delta}{2K(T+1)}\right)}{2} \nonumber \\
+    r(n) &=  \sqrt{\dfrac{\operatorname{log}\left(\dfrac{2K(T+1)}{\delta}\right)}{2n}} \label{eq:uppercb}
+\end{align}
+
 Así, \(P(A_r)\leq\delta\).
 
 Ya construimos intervalos de confianza que, con probabilidad al menos \(1-\delta\), contienen simultáneamente las verdaderas medias de todos los brazos, para todos los instantes hasta \(T\).
