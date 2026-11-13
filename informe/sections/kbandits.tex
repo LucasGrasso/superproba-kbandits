@@ -1,16 +1,15 @@
 \section{K-Bandits}
 
-Se tienen \(K\) maquinas tragamonedas, que potencialmente modifican su recompensa en cada momento.\\
-Formalmente, se tienen \(K\) distribuciones \(\{\D{i}{1}, \D{i}{2}, \cdots , \D{i}{T}\}_{i \leq K}\) con soporte asumido en \([0,1]\).
+Se tienen \(K\) máquinas tragamonedas. Cada brazo \(a\) tiene distribución estacionaria \(D_a\), soporte en \([0,1]\) y media \(\mu_a\). Sus recompensas son i.i.d. e independientes de las de los otros brazos; las decisiones solo utilizan observaciones pasadas.
 
-Tirar del brazo (samplear) del brazo \(i\) a tiempo \(t\) te otorga una recompensa \(X_{i,t} \sim \D{i}{t}\).
-Si inicialmente no conoces nada de \(\{\D{i}{1}, \D{i}{2},\cdots, \D{i}{T}\}_{i \leq K}\), ¿Como maximizas tu recompensa esperada para \(T\) tiradas?
+Tras una tirada inicial de cada brazo, realizamos \(T\) tiradas adicionales: \(K+T\) en total. El instante \(t=0\) corresponde al fin de la inicialización. En la tirada adicional \(t\), elegir \(I_t=a_t=a\) revela \(X_{a,t}\sim D_a\). ¿Cómo maximizamos la recompensa esperada sin conocer las distribuciones?
 
 Si sampleas un mal numero, no podrías saber si la maquina es mala o si tuviste mala suerte.
-Si asumimos \textbf{distribuciones estacionarias}, habiendo visitado cada maquina una vez, podemos intuitivamente estimar la media de cada distribución como:
+Si \(Y_1^a\) es la recompensa inicial del brazo \(a\), su número de visitas y su media empírica tras \(t\) tiradas adicionales son:
 
 \begin{equation}
-    \hat{\mu}_t(a) = \dfrac{\sum^t_{s=1} X_{s,a} \mathbbm{1}_{\{I_s = a\}}}{\sum^t_{s=1} \mathbbm{1}_{\{I_s = a\}}}
+    n_t(a)=1+\sum_{s=1}^t\mathbbm{1}_{\{I_s=a\}},\qquad
+    \hat{\mu}_t(a) = \dfrac{Y_1^a+\sum^t_{s=1} X_{a,s} \mathbbm{1}_{\{I_s = a\}}}{n_t(a)}.
 \end{equation}
 
 Pero simplemente tomar la acción greedy o golosa:

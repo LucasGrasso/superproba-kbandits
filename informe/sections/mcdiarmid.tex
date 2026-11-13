@@ -2,7 +2,7 @@
 
 ¿Como hariamos ahora para estimar funciones de las muestras? 
 
-Por ejemplo, si querriamos:
+Para este ejemplo tomamos un número fijo \(n\) de muestras por brazo, todas independientes, sin selección adaptativa. Consideremos:
 
 \[
 f(X) = \max_{i} \hat{\mu}_i
@@ -14,17 +14,18 @@ Observemos que si cambiamos una única observación \(X_j^a\) por otro valor \(X
 
 La media empírica del brazo \(a\) cambia a lo sumo
 \[
-|\hat\mu(a)-\hat\mu'((a)|
+|\hat\mu(a)-\hat\mu'(a)|
 =
 \frac{|X_j^a-X_j^{a\prime}|}{n}
 \le\frac1n.
 \]
 
-Las medias de los demás brazos permanecen iguales. Usando desigualdad triangular obtenemos
+Las demás medias permanecen iguales y el máximo cambia a lo sumo lo que cambia una coordenada, luego
 \[
 |f(x)-f(x')|\le\frac{1}{n}.
 \]
 
 Esto motiva el metodo de las diferencias acotadas de McDiarmid, que nos permite acotar la probabilidad de que una función de variables aleatorias independientes se desvíe de su valor esperado.
+Aquí el centro es \(\E{\max_a\hat\mu_a}\), que no necesariamente coincide con \(\max_a\mu_a\).
 
 \input{theorems/mcdiarmid}

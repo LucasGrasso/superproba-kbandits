@@ -86,13 +86,13 @@ Esta definida siempre y cuando \(M_X^\mathcal{F}(t)\) lo este.
 \subsection{Secuencias de diferencias de Martingalas}
 
 \begin{definition}[Secuencia de diferencias de Martingala]
-    Dadas \((X_n)_n\) variables aleatorias, \((D_n)_n\) es una secuencia de diferencias de martingala si 
+    Dadas \((X_n)_n\) variables aleatorias, \((D_n)_{n\geq1}\) es una secuencia de diferencias de martingala si cada \(D_n\) es integrable y
 
     \begin{equation}
-        D_i = f(X_1,\cdots,X_i) \quad \E{D_{n+1}|\sigma(X_1,\cdots,X_n)} = 0
+        D_n = f_n(X_1,\cdots,X_n), \qquad \E{D_n|\sigma(X_1,\cdots,X_{n-1})} = 0.
     \end{equation}
 \end{definition}
 
 \begin{observation}[Equivalencia Martingala \(\iff\) Diferencia de Martingalas]
-Dada una martingala \((M_n)_n\), uno puedo construirse una secuencia de diferencia de martingala como \(D_n = M_n - M_{n-1}\). Dada una secuencia de diferencia de martingala \((D_n)_n\), uno puedo construirse una martingala como \(M_0 = 0 \quad M_n = \sum^m_{n=0}D_n\).
+Dada una martingala \((M_n)_n\), se obtiene una secuencia de diferencias de martingala mediante \(D_n = M_n - M_{n-1}\). Recíprocamente, dada una secuencia de diferencias de martingala \((D_n)_{n\geq1}\), \(M_0 = 0\) y \(M_n = \sum_{i=1}^n D_i\) definen una martingala.
 \end{observation}

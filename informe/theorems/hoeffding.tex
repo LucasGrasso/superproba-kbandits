@@ -1,5 +1,5 @@
 \begin{theorem}{Lema de Hoeffding para la funcion generadora de cumulantes condicional}{teo:lema-hoeffding}
-Sea \(\mathcal{F}\) una \(\sigma\)-algebra tal que \(\E{X|\mathcal{F}}=0\) y \(X\) tal que \(a \leq X \leq b\) c.s.
+Sea \(\mathcal{F}\) una \(\sigma\)-álgebra, \(\E{X|\mathcal{F}}=0\) y \(a \leq X \leq b\) c.s., donde \(a,b\) son \(\mathcal{F}\)-medibles y \(b-a\leq c\) para una constante finita \(c\).
 
 \begin{equation}  \label{eq:hoeffding}
     K_X^\mathcal{F}(t) \leq \dfrac{t^2(b-a)^2}{8} \quad \forall t>0 
@@ -8,35 +8,30 @@ Sea \(\mathcal{F}\) una \(\sigma\)-algebra tal que \(\E{X|\mathcal{F}}=0\) y \(X
 \end{theorem}
 
 \begin{proof}
-   Como \(K_X^\mathcal{F}\) esta definida y es analitica (pues \(X\) acotada). Para \(t>0, \exists\xi \in (0,t) \) tal que:
-
-    \begin{align}
-        K_X^\mathcal{F}(t) &= K_X^\mathcal{F}(0) + t\frac{d}{dt}K_X^\mathcal{F}(0) + \frac{t^2}{2}\frac{d^2}{dt^2}K_X^\mathcal{F}(\xi) \nonumber \\
-                         &= \frac{t^2}{2}\frac{d^2}{dt^2}K_X^\mathcal{F}(\xi) \text{ (Pues } \E{X|\mathcal{F}}=0)
-    \end{align}
+   Tomando esperanzas condicionales, \(a\leq0\leq b\), luego \(|X|\leq c\). Por tanto podemos derivar la generadora condicional. Los extremos \(a,b\), al ser \(\mathcal{F}\)-medibles, se extraen de las esperanzas condicionales.
 
     Como \(a\leq X\leq b \implies (X-a)(b-X)\geq0 \implies X^2\leq(a+b)X-ab\).
     \begin{align*}
-        {M_X^{\mathcal F}}''(\xi)
-        &=\E{X^2e^{\xi X}\mid\mathcal F}\\
-        &\leq(a+b) \E{Xe^{\xi X}\mid\mathcal F} -ab\E{e^{\xi X}\mid\mathcal F}\\
-        &=(a+b){M_X^{\mathcal F}}'(\xi)-abM_X^{\mathcal F}(\xi).
+        {M_X^{\mathcal F}}''(u)
+        &=\E{X^2e^{u X}\mid\mathcal F}\\
+        &\leq(a+b) \E{Xe^{u X}\mid\mathcal F} -ab\E{e^{u X}\mid\mathcal F}\\
+        &=(a+b){M_X^{\mathcal F}}'(u)-abM_X^{\mathcal F}(u).
     \end{align*}
 
      Usando lo observado en \eqref{eq:dt2KX}:
 
     \begin{align*}
-\frac{d^2}{dt^2} K^\mathcal{F}_X(\xi) &= \frac{M^\mathcal{F}_X(\xi){M^\mathcal{F}_X}''(\xi) - ({M^\mathcal{F}_X}'(\xi))^2}{(M^\mathcal{F}_X(\xi))^2} \\
-                                      &= \frac{{M^\mathcal{F}_X}''(\xi)}{M^\mathcal{F}_X(\xi)} - \left(\frac{{M^\mathcal{F}_X}'(\xi)}{M^\mathcal{F}_X(\xi)} \right)^2 \\
-                                      &\leq (a+b) \frac{{M^\mathcal{F}_X}'(\xi)}{M^\mathcal{F}_X(\xi)} -ab -  \left(\frac{{M^\mathcal{F}_X}'(\xi)}{M^\mathcal{F}_X(\xi)} \right)^2 \\
-                                      &= \frac{(b-a)^2}{4} - \left(\frac{{M^\mathcal{F}_X}'(\xi)}{M^\mathcal{F}_X(\xi)} -\frac{a+b}{2}\right)^2 \\
+{K^\mathcal{F}_X}''(u) &= \frac{M^\mathcal{F}_X(u){M^\mathcal{F}_X}''(u) - ({M^\mathcal{F}_X}'(u))^2}{(M^\mathcal{F}_X(u))^2} \\
+                                      &= \frac{{M^\mathcal{F}_X}''(u)}{M^\mathcal{F}_X(u)} - \left(\frac{{M^\mathcal{F}_X}'(u)}{M^\mathcal{F}_X(u)} \right)^2 \\
+                                      &\leq (a+b) \frac{{M^\mathcal{F}_X}'(u)}{M^\mathcal{F}_X(u)} -ab -  \left(\frac{{M^\mathcal{F}_X}'(u)}{M^\mathcal{F}_X(u)} \right)^2 \\
+                                      &= \frac{(b-a)^2}{4} - \left(\frac{{M^\mathcal{F}_X}'(u)}{M^\mathcal{F}_X(u)} -\frac{a+b}{2}\right)^2 \\
                                       &\leq \frac{(b-a)^2}{4}
     \end{align*}
 
-    Luego,
+    Como \(K_X^\mathcal{F}(0)={K_X^\mathcal{F}}'(0)=0\), integrando dos veces,
 
     \begin{align*}
-         K_X^\mathcal{F}(t) &= \frac{t^2}{2}\frac{d^2}{dt^2}K_X^\mathcal{F}(\xi) \\
+         K_X^\mathcal{F}(t) &= \int_0^t(t-u){K_X^\mathcal{F}}''(u)\,du \\
                             &\leq t^2\frac{(b-a)^2}{8} \qedhere
     \end{align*}
 

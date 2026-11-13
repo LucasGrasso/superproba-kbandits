@@ -1,6 +1,6 @@
 \section{Martingalas y bandidos}
 
-Sea \(Y^a_j\) la recompensa obtenida la \(j\)-esima vez que se eligió el brazo \(a\). Definimos:
+Sea \((Y^a_j)_{j\geq1}\) la sucesión i.i.d. de recompensas del brazo \(a\), cuya \(j\)-ésima entrada se revela al elegirlo por \(j\)-ésima vez. Definimos:
 
 \begin{equation} \label{eq:dif_martingala_bandits}
     D^a_t = Y^a_t - \mu_a \quad \forall t\in \mathbbm{N}
@@ -10,7 +10,7 @@ Observemos que es una secuencia de diferencia de martingala \(\forall a\). Sea \
 
 \begin{proof}
     \begin{align*}
-        \E{D^a_{t+1} | \mathcal{F}^a_t} &= \E{Y^a_{t+1} | \mathcal{F}^a_n} - \mu_a \\
+        \E{D^a_{t+1} | \mathcal{F}^a_t} &= \E{Y^a_{t+1} | \mathcal{F}^a_t} - \mu_a \\
                                      &= \E{Y^a_{t+1}} - \mu_a \\
                                     &= \mu_a - \mu_a \\
                                     &= 0 \qedhere.
@@ -22,8 +22,8 @@ Luego
     M^a_t = \sum^t_{s=1}(Y^a_s-\mu_a)
 \end{equation}
 
-Es una Martingala. Mide la suma de errores de estimación del brazo a. Si \(N_t(a)\) el numero de visitas al brazo \(a\) hasta tiempo \(t\). Nos gustaria poder controlar simultáneamente, para cada brazo \(a\):
-\[P\left(\left|\frac{M^a_t}{n_t(a)}\right| \geq \varepsilon\right)\].
+Es una martingala. Su índice cuenta muestras del brazo, mientras que \(t\) en \(n_t(a)\) cuenta tiradas adicionales. Nos gustaría controlar simultáneamente, para cada brazo \(a\):
+\[P\left(\left|\frac{M^a_{n_t(a)}}{n_t(a)}\right| \geq \varepsilon\right).\]
 
 
 Para eso, introducimos una versión del lema de Hoeffding y el teorema de Azuma-Hoeffding.

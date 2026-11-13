@@ -16,37 +16,29 @@
 \end{theorem}
 
 \begin{proof}
-	Definamos la secuencia de diferencia de martingalas \(V_k\) como:
+    Sea \(\mathcal F_k=\sigma(X_1,\ldots,X_k)\), con \(\mathcal F_0\) trivial. Definimos
+    \begin{align}
+        V_k &= \E{f(S)|\mathcal F_k}-\E{f(S)|\mathcal F_{k-1}},\\
+        V &= f(S)-\E{f(S)}=\sum_{k=1}^n V_k.
+    \end{align}
+    Por la propiedad de la torre,
+    \[
+        \E{V_k|\mathcal F_{k-1}}=0,
+    \]
+    así que \((V_k)\) es una secuencia de diferencias de martingala.
 
-	\begin{align}
-		V_k & = \E{f(S)|X_1, \ldots, X_k} - \E{f(S)|X_1, \ldots, X_{k-1}} \\
-		V   & = f(S) - \E{f(S)} = \sum_{i=1}^n V_k
-	\end{align}
-
-	\((V_k)\) es una secuencia de martingalas, ya que:
-	\[
-		\E{\E{V|X_1, \cdots, X_{k+1}}|X_1, \cdots, X_k} = \E{V|X_1, \cdots, X_k}
-	\]
-
-	Ademas observemos que como \(\E{f(S)}\) constante:
-
-	\begin{equation}
-		V_k = \E{f(S)|X_1, \ldots, X_k} - \E{f(S)|X_1, \ldots, X_{k-1}}
-	\end{equation}
-
-	Luego, podemos acotar \(V_k\) de la siguiente manera:
-
-	\begin{align}
-		U_k & = \sup_x \E{f(S)|X_1, \ldots, X_{k-1}, X_k = x} - \E{f(S)|X_1, \ldots, X_{k-1}} \\
-		L_k & = \inf_x \E{f(S)|X_1, \ldots, X_{k-1}, X_k = x} - \E{f(S)|X_1, \ldots, X_{k-1}}
-	\end{align}
-
-	Que por la ecuacion \ref{eq:estabilidad_mcdiarmid} se cumple que
-
-	\begin{equation*}
-		U_k - L_k = \sup_{x,x'} \E{f(S)|X_1, \ldots, X_{k-1}, X_k = x} - \E{f(S)|X_1, \ldots, X_{k-1}, X_k = x'} \leq c_k.
-	\end{equation*}
-
-	Luego, aplicando la desigualdad de Azuma-Hoeffding a \((V_k)\) obtenemos el resultado deseado. \qedhere
-
+    Fijado el pasado, sea
+    \[
+        g_k(x)=\E{f(S)|X_1,\ldots,X_{k-1},X_k=x}.
+    \]
+    Por independencia, las muestras futuras tienen la misma distribución para todo \(x\). Aplicando \eqref{eq:estabilidad_mcdiarmid} dentro de la esperanza,
+    \[
+        |g_k(x)-g_k(x')|\leq c_k.
+    \]
+    Por tanto, con extremos \(\mathcal F_{k-1}\)-medibles,
+    \begin{align*}
+        L_k&=\inf_x g_k(x)-\E{f(S)|\mathcal F_{k-1}},\\
+        U_k&=\sup_x g_k(x)-\E{f(S)|\mathcal F_{k-1}},
+    \end{align*}
+    tenemos \(L_k\leq V_k\leq U_k\) y \(U_k-L_k\leq c_k\). Aplicando Azuma-Hoeffding a \(\sum_{k=1}^n V_k\) obtenemos ambas cotas. \qedhere
 \end{proof}
