@@ -5,11 +5,11 @@
 
 ### Instalación
 
-En el REPL de [Julia](https://julialang.org/), ejecutar:
+Usar [Julia](https://julialang.org/) **1.11.9** y Pluto **1.1.0**. En el REPL, ejecutar:
 
 ```julia
 using Pkg
-Pkg.add("Pluto")
+Pkg.add(name="Pluto", version="1.1.0")
 ```
 
 ### Ejecución
@@ -20,3 +20,5 @@ En el REPL de [Julia](https://julialang.org/), ejecutar:
 import Pluto
 Pluto.run(notebook="notebook.jl")
 ```
+
+Los gráficos se guardan automáticamente en `plots/`.
