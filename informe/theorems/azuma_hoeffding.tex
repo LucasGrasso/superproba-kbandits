@@ -7,7 +7,7 @@
 
     \begin{align}
         P\left(\sum^m_{i=1} D_i \geq \varepsilon\right) &\leq \operatorname{exp}\left(\dfrac{-2\varepsilon^2}{\sum^m_{i=1}c_i^2}\right) \label{eq:azuma1} \\
-        P\left(\sum^m_{i=1} D_i \leq -\varepsilon\right) &\leq \operatorname{exp}\left(\dfrac{-2\varepsilon^2}{\sum^m_{i=1}c_i^2}\right)
+        P\left(\sum^m_{i=1} D_i \leq -\varepsilon\right) &\leq \operatorname{exp}\left(\dfrac{-2\varepsilon^2}{\sum^m_{i=1}c_i^2}\right) \label{eq:azuma2}
     \end{align}
 
     ergo,
@@ -51,6 +51,6 @@
 \end{proof}
 
 \begin{observation}[Azuma para supermartingalas]
-    La primera desigualdad de Azuma-Hoeffding, \eqref{eq:azuma1}, se puede generalizar a supermartingalas.
-    Esto pues para el lema de Hoeffding podemos pedir \(\E{X | \mathcal{F}} \leq 0\).  
+    Bajo las mismas hipótesis de acotación de los incrementos, la primera desigualdad de Azuma-Hoeffding, \eqref{eq:azuma1}, se puede generalizar a supermartingalas.
+    En consecuencia, la segunda, \eqref{eq:azuma2}, a submartingalas.
 \end{observation}
