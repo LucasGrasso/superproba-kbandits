@@ -21,6 +21,9 @@ using PlutoUI, Distributions, Plots, Random
 
 # ╔═╡ e0713f09-95c1-4d1e-862e-ab6cee9dff50
 md"""
+[![Informe](https://img.shields.io/badge/Informe-b31b1b.svg)](https://github.com/LucasGrasso/superproba-kbandits/blob/main/informe/final_superproba.pdf)
+[![GitHub](https://img.shields.io/badge/GitHub-181717.svg?logo=github&logoColor=white)](https://github.com/LucasGrasso/superproba-kbandits)
+
 # Algoritmos UCB en K-bandits
 """
 
@@ -1449,7 +1452,7 @@ version = "1.13.0+0"
 """
 
 # ╔═╡ Cell order:
-# ╠═e0713f09-95c1-4d1e-862e-ab6cee9dff50
+# ╟─e0713f09-95c1-4d1e-862e-ab6cee9dff50
 # ╠═2550fcee-da05-11f1-1349-05dd7588d36e
 # ╠═369a0191-71b9-401b-989b-981c4f3264c9
 # ╠═52c29f42-9895-4648-b36f-5c8b5a387c4f
