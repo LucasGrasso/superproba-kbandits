@@ -25,10 +25,17 @@ md"""
 [![GitHub](https://img.shields.io/badge/GitHub-181717.svg?logo=github&logoColor=white)](https://github.com/LucasGrasso/superproba-kbandits)
 
 # Algoritmos UCB en K-bandits
+
+Para acceder al informe o al repositorio clickear los botones de arriba.
 """
 
 # ╔═╡ 369a0191-71b9-401b-989b-981c4f3264c9
 Random.seed!(42)
+
+# ╔═╡ c0502291-6074-481b-a962-4f326c2e5740
+md"""
+Aqui se puede modificar la cantidad de distribuciones.
+"""
 
 # ╔═╡ 52c29f42-9895-4648-b36f-5c8b5a387c4f
 @bind K Slider(1:20, default=5, show_value=true)
@@ -59,6 +66,11 @@ let
         layout=(1, length(dists)),
         size=(250 * length(dists), 300))
 end
+
+# ╔═╡ 1d3b9708-6594-48ab-8a3f-2f59150b76e1
+md"""
+Aqui se pueden modificar la cantidad de tiradas adicionales y el nivel de confianza 1-δ.
+"""
 
 # ╔═╡ 85a7982b-dc5b-4111-9597-c53889e96660
 @bind T Slider(1000:10000, default=5000, show_value=true)
@@ -174,6 +186,15 @@ let
     savefig(p, joinpath(plot_dir, "acc_reward.png"))
     p
 end
+
+# ╔═╡ 793471c9-3a31-4a0e-be80-ab1019cb8574
+md"""
+**Nota:**
+
+El Pseudo-regret mide la recompesa perdida esperada por elegir acciones suboptimas.
+Luego de N tiradas: R̄ₙ= ∑ᴺₛ μₘₐₓ-μₛ
+donde μₘₐₓ es la media verdadera del mejor brazo y μₛ la media elejida en el paso s.
+"""
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
@@ -1454,16 +1475,19 @@ version = "1.13.0+0"
 # ╔═╡ Cell order:
 # ╟─e0713f09-95c1-4d1e-862e-ab6cee9dff50
 # ╠═2550fcee-da05-11f1-1349-05dd7588d36e
-# ╠═369a0191-71b9-401b-989b-981c4f3264c9
+# ╟─369a0191-71b9-401b-989b-981c4f3264c9
+# ╟─c0502291-6074-481b-a962-4f326c2e5740
 # ╠═52c29f42-9895-4648-b36f-5c8b5a387c4f
 # ╠═7c03c68d-7955-46a7-9d98-cdd6945c108b
-# ╠═ca13f2e3-b2c2-49b1-848e-369a8727c42b
-# ╠═fb2f7960-891f-4f58-ab64-b3179fa4e5d4
+# ╟─ca13f2e3-b2c2-49b1-848e-369a8727c42b
+# ╟─fb2f7960-891f-4f58-ab64-b3179fa4e5d4
+# ╟─1d3b9708-6594-48ab-8a3f-2f59150b76e1
 # ╠═85a7982b-dc5b-4111-9597-c53889e96660
 # ╠═f403f106-4f71-487e-a779-b87b5f26eec9
 # ╠═469f51a5-15c2-455d-a7f1-62f3996eb83c
-# ╠═c0435530-9aa3-4206-92f6-e5ee87194399
-# ╠═1c418e89-ea92-436a-ae35-fe1dd4cf1c33
-# ╠═e252477d-9bf5-465f-a528-8c5084ed645b
+# ╟─c0435530-9aa3-4206-92f6-e5ee87194399
+# ╟─1c418e89-ea92-436a-ae35-fe1dd4cf1c33
+# ╟─e252477d-9bf5-465f-a528-8c5084ed645b
+# ╟─793471c9-3a31-4a0e-be80-ab1019cb8574
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
