@@ -32,10 +32,10 @@ Que es precisamente lo que queriamos acotar. Formalmente, nos gustaria que:
 P\left(\exists t\in\{0,\ldots,T\},\ \exists a \leq K:\left|\hat{\mu}_t(a) - \mu_a\right| \ge r(n_t(a)) \right) \leq \delta.
 \end{equation}
 
-Sean
+Para \(t\in\{0,\ldots,T\}\), sean
 \begin{align*}
     E^a_t &= \{|\hat{\mu}_t(a)-\mu_a| \geq r(n_t(a))\}. \\
-    A_{r} &= \left\{\exists t\in\{0,\ldots,T\},\ \exists a \leq K:\left|\hat{\mu}_t(a) - \mu_a\right| \ge r(n_t(a)) \right\}.
+    A_r^t &= \left\{\exists s\in\{0,\ldots,t\},\ \exists a \leq K:\left|\hat{\mu}_s(a) - \mu_a\right| \ge r(n_s(a)) \right\}.
 \end{align*}
 
 Como \(1\leq n_t(a)\leq t+1\), tenemos que
@@ -43,21 +43,20 @@ Como \(1\leq n_t(a)\leq t+1\), tenemos que
 \begin{align*}
 E_t^a &=\left\{\left|\frac{M^a_{n_t(a)}}{n_t(a)}\right|\ge r(n_t(a))\right\}\\
      &= \bigcup_{n=1}^{t+1}\left(\{n_t(a)=n\}\cap\left\{\left|\frac{M_n^a}{n}\right|\ge r(n)\right\}\right)\\
-     &\subseteq\bigcup_{n=1}^{t+1}\left\{\left|\frac{M_n^a}{n}\right|\ge r(n)\right\} \\
-     &\subseteq\bigcup_{n=1}^{T+1}\left\{\left|\frac{M_n^a}{n}\right|\ge r(n)\right\}.
+     &\subseteq\bigcup_{n=1}^{t+1}\left\{\left|\frac{M_n^a}{n}\right|\ge r(n)\right\}.
 \end{align*}
 
 Por Azuma-Hoeffding, pues los incrementos de \(M_n^a\) están en intervalos de longitud 1:
 
 \begin{align}
-    P(A_{r}) &= P\left(\bigcup^K_{a=1}\bigcup^T_{t=0} E^a_t\right) \nonumber \\
-             &\leq P\left( \bigcup^K_{a=1}\bigcup^{T+1}_{n=1} \left\{\left|\frac{M_n^a}{n}\right|\ge r(n)\right\}\right) \nonumber \\
-             & \leq \sum^K_{a=1} \sum^{T+1}_{n=1} P\left( \left\{\left|\frac{M_n^a}{n}\right|\ge r(n)\right\}\right) \nonumber\\
-             & \leq \sum^K_{a=1} \sum^{T+1}_{n=1} P\left( \left\{\left|M_n^a\right|\ge nr(n)\right\}\right) \nonumber\\
-                &\leq 2\sum^K_{a=1}\sum^{T+1}_{n=1}\operatorname{exp}(-2nr(n)^2).
+    P(A_r^t) &= P\left(\bigcup^K_{a=1}\bigcup^t_{s=0} E^a_s\right) \nonumber \\
+             &\leq P\left( \bigcup^K_{a=1}\bigcup^{t+1}_{n=1} \left\{\left|\frac{M_n^a}{n}\right|\ge r(n)\right\}\right) \nonumber \\
+             & \leq \sum^K_{a=1} \sum^{t+1}_{n=1} P\left( \left\{\left|\frac{M_n^a}{n}\right|\ge r(n)\right\}\right) \nonumber\\
+             & \leq \sum^K_{a=1} \sum^{t+1}_{n=1} P\left( \left\{\left|M_n^a\right|\ge nr(n)\right\}\right) \nonumber\\
+                &\leq 2\sum^K_{a=1}\sum^{t+1}_{n=1}\operatorname{exp}(-2nr(n)^2).
 \end{align}
 
-Elegimos cada sumando exponencial igual a \(\delta/[2K(T+1)]\). Despejando para \(r(n)\) obtenemos:
+Fijado el horizonte \(T\), elegimos la función \(r\) de modo que, para cada \(n\in\{1,\ldots,T+1\}\), el sumando exponencial tenga el mismo valor \(\delta/[2K(T+1)]\). Despejando para \(r(n)\) obtenemos:
 
 \begin{align}
     \operatorname{exp}(-2nr(n)^2) &= \dfrac{\delta}{2K(T+1)}  \nonumber \\
@@ -66,7 +65,13 @@ Elegimos cada sumando exponencial igual a \(\delta/[2K(T+1)]\). Despejando para 
     r(n) &=  \sqrt{\dfrac{\operatorname{log}\left(\dfrac{2K(T+1)}{\delta}\right)}{2n}} \label{eq:uppercb}
 \end{align}
 
-Así, \(P(A_r)\leq\delta\).
+Con esta elección, \(nr(n)^2\) es constante respecto de \(n\). Sustituyendo dentro de la suma, para todo \(t\in\{0,\ldots,T\}\),
+\begin{align*}
+    P(A_r^t)
+    &\leq 2\sum_{a=1}^K\sum_{n=1}^{t+1}\frac{\delta}{2K(T+1)}\\
+    &=\delta\frac{t+1}{T+1}\leq\delta.
+\end{align*}
+En particular, \(P(A_r^T)\leq\delta\).
 
 Ya construimos intervalos de confianza que, con probabilidad al menos \(1-\delta\), contienen simultáneamente las verdaderas medias de todos los brazos, para todos los instantes hasta \(T\).
 
@@ -97,7 +102,7 @@ Una posibilidad sería elegir el brazo con mayor media empírica, pero esto no f
 
 Vamos a demostrar que, con alta probabilidad, la cantidad de veces que UCB elige un brazo subóptimo está acotada.
 
-Sea \(a_*\in\arg\max_{a\leq K}\mu_a\). En el evento \(A_r^c\), si UCB selecciona el brazo \(a\) en la tirada adicional \(t+1\):
+Sea \(a_*\in\arg\max_{a\leq K}\mu_a\). En el evento \((A_r^T)^c\), si UCB selecciona el brazo \(a\) en la tirada adicional \(t+1\):
 \[
 \begin{aligned}
 \mu_{a_*}
@@ -112,7 +117,7 @@ Para un brazo subóptimo, \(\Delta_a=\mu_{a_*}-\mu_a>0\), luego
 \mu_{a_*} - \mu_a \leq 2r(n_t(a)) \implies n_t(a) \le \frac{2\log(2K(T+1)/\delta)}{(\mu_{a_*} - \mu_a)^2}
 \end{equation}
 
-Después de la última selección de \(a\), el contador aumenta en uno. Por tanto, en \(A_r^c\),
+Después de la última selección de \(a\), el contador aumenta en uno. Por tanto, en \((A_r^T)^c\),
 \[
     n_T(a)\leq 1+\frac{2\log(2K(T+1)/\delta)}{\Delta_a^2}.
 \]
