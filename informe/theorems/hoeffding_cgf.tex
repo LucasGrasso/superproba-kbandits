@@ -1,0 +1,51 @@
+\begin{theorem}{Lema de Hoeffding para la funcion generadora de cumulantes condicional}{teo:lema-hoeffding}
+    Sea \(\mathcal{F}\) una \(\sigma\)-álgebra, \(\E{X|\mathcal{F}} \leq 0\) y \(a \leq X \leq b\) c.s., donde \(a,b\) son \(\mathcal{F}\)-medibles y \(b-a\leq c\) para una constante finita \(c\).
+
+    \begin{equation}  \label{eq:hoeffding}
+        K_X^\mathcal{F}(t) \leq \dfrac{t^2(b-a)^2}{8} \quad \forall t>0
+    \end{equation}
+
+\end{theorem}
+
+\begin{proof}
+    Sea \(m = \E{X|\mathcal{F}}\leq 0\). Definimos \(Z = X-m\).
+    Como \(a \leq m \leq b\) c.s., se tiene que \(a-m \leq Z \leq b-m\) c.s. y \(b-a \leq c\). Por lo tanto, \(Z\) cumple las mismas condiciones que \(X\) y además \(\E{Z|\mathcal{F}} = 0\).
+    Ademas se tiene
+    \[
+        K_X^\mathcal{F}(t) = \log \E{e^{tX}|\mathcal{F}} = \log \E{e^{t(Z+m)}|\mathcal{F}} = \log \E{e^{tm}e^{tZ}|\mathcal{F}} = tm + K_Z^\mathcal{F}(t) \leq K_Z^\mathcal{F}(t)
+    \]
+
+    Por lo tanto, podemos asumir sin pérdida de generalidad que \(\E{X|\mathcal{F}} = 0\).
+    Como \(K_X^\mathcal{F}\) esta definida y es analitica (pues \(X\) acotada). Por Taylor, para \(t>0\), casi seguramente existe \(\xi \in (0,t)\) tal que:
+
+    \begin{align}
+        K_X^\mathcal{F}(t) & = K_X^\mathcal{F}(0) + t{K_X^\mathcal{F}}'(0) + \frac{t^2}{2}{K_X^\mathcal{F}}''(\xi) \nonumber \\
+                           & = \frac{t^2}{2}{K_X^\mathcal{F}}''(\xi) \text{ (Pues } \E{X|\mathcal{F}} = 0)
+    \end{align}
+
+    Como \(a\leq X\leq b \implies (X-a)(b-X)\geq0 \implies X^2\leq(a+b)X-ab\).
+    \begin{align*}
+        {M_X^{\mathcal F}}''(\xi)
+         & =\E{X^2e^{\xi X}\mid\mathcal F}                                       \\
+         & \leq(a+b) \E{Xe^{\xi X}\mid\mathcal F} -ab\E{e^{\xi X}\mid\mathcal F} \\
+         & =(a+b){M_X^{\mathcal F}}'(\xi)-abM_X^{\mathcal F}(\xi).
+    \end{align*}
+
+    Usando lo observado en \eqref{eq:dt2KX}:
+
+    \begin{align*}
+        {K^\mathcal{F}_X}''(\xi) & = \frac{M^\mathcal{F}_X(\xi){M^\mathcal{F}_X}''(\xi) - ({M^\mathcal{F}_X}'(\xi))^2}{(M^\mathcal{F}_X(\xi))^2}                               \\
+                                 & = \frac{{M^\mathcal{F}_X}''(\xi)}{M^\mathcal{F}_X(\xi)} - \left(\frac{{M^\mathcal{F}_X}'(\xi)}{M^\mathcal{F}_X(\xi)} \right)^2              \\
+                                 & \leq (a+b) \frac{{M^\mathcal{F}_X}'(\xi)}{M^\mathcal{F}_X(\xi)} -ab -  \left(\frac{{M^\mathcal{F}_X}'(\xi)}{M^\mathcal{F}_X(\xi)} \right)^2 \\
+                                 & = \frac{(b-a)^2}{4} - \left(\frac{{M^\mathcal{F}_X}'(\xi)}{M^\mathcal{F}_X(\xi)} -\frac{a+b}{2}\right)^2                                    \\
+                                 & \leq \frac{(b-a)^2}{4}
+    \end{align*}
+
+    Luego,
+
+    \begin{align*}
+        K_X^\mathcal{F}(t) & = \frac{t^2}{2}{K_X^\mathcal{F}}''(\xi) \\
+                           & \leq t^2\frac{(b-a)^2}{8} \qedhere
+    \end{align*}
+
+\end{proof}
