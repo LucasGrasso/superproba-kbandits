@@ -17,7 +17,12 @@ macro bind(def, element)
 end
 
 # ╔═╡ 2550fcee-da05-11f1-1349-05dd7588d36e
-using PlutoUI, Distributions, Plots, Random
+begin
+    using PlutoUI, Distributions, Plots, Random
+    include(joinpath(@__DIR__, "src", "NotebookSupport.jl"))
+    using .NotebookSupport: experiment_rng, sample_distributions, plot_distributions,
+        plot_estimator_convergence, plot_accumulated_reward
+end
 
 # ╔═╡ e0713f09-95c1-4d1e-862e-ab6cee9dff50
 md"""
@@ -30,7 +35,10 @@ Para acceder al informe o al repositorio clickear los botones de arriba.
 """
 
 # ╔═╡ 369a0191-71b9-401b-989b-981c4f3264c9
-seed = 42
+begin
+    seed = 42
+    plot_dir = joinpath(relpath(@__DIR__), "plots")
+end
 
 # ╔═╡ c0502291-6074-481b-a962-4f326c2e5740
 md"""
@@ -47,10 +55,8 @@ $@bind K Slider(1:20, default=5, show_value=true)
 
 # ╔═╡ 7c03c68d-7955-46a7-9d98-cdd6945c108b
 begin
-	dists = let rng = Xoshiro(seed)
-		[truncated(Normal(rand(rng), rand(rng) + 0.1), 0, 1) for _ in 1:K]
-	end
-	μ = mean.(dists)
+    dists = sample_distributions(K; seed)
+    μ = mean.(dists)
 end
 
 # ╔═╡ ca13f2e3-b2c2-49b1-848e-369a8727c42b
@@ -60,19 +66,7 @@ begin
 end
 
 # ╔═╡ fb2f7960-891f-4f58-ab64-b3179fa4e5d4
-let
-    panels = [
-        begin
-            x = range(quantile(d, 0.001), quantile(d, 0.999), length=400)
-            plot(x, pdf.(Ref(d), x), legend=false)
-        end
-        for (a, d) in enumerate(dists)
-    ]
-
-    plot(panels...,
-        layout=(1, length(dists)),
-        size=(250 * length(dists), 300))
-end
+plot_distributions(dists)
 
 # ╔═╡ 1d3b9708-6594-48ab-8a3f-2f59150b76e1
 md"""
@@ -94,7 +88,7 @@ $@bind δ Slider(0.001:0.001:1, default=0.05, show_value=true)
 "
 
 # ╔═╡ 469f51a5-15c2-455d-a7f1-62f3996eb83c
-visits, μ̂, μ̂_history, regret_history, pseudo_regret_history = let rng = Xoshiro(seed + 1)
+visits, μ̂, μ̂_history, regret_history, pseudo_regret_history = let rng = experiment_rng(seed; stream=1)
 	visits = ones(Int, K)
 	μ̂ = [rand(rng, d) for d in dists]
 	μ̂_history = Matrix{Float64}(undef, T + 1, K)
@@ -124,84 +118,11 @@ end
 R = sum(visits .* μ̂)
 
 # ╔═╡ 1c418e89-ea92-436a-ae35-fe1dd4cf1c33
-let
-    colors = ["#0072B2", "#D55E00"]
-
-    p = plot(
-        xlabel = "Tiradas adicionales (t)",
-        ylabel = "Media de recompensa",
-        title = "UCB - Convergencia de μ̂",
-        legend = :outerright,
-        size = (900, 450),
-        margin = 5 * Plots.mm,
-        dpi = 180
-    )
-
-    for (i, a) in enumerate(unique([a_max, a_min]))
-        c = colors[i]
-        role = a_max == a_min ? "único" : a == a_max ? "mejor" : "peor"
-
-        plot!(p, 0:T, μ̂_history[:, a],
-            color=c,
-            linewidth=1.5,
-            label="μ̂ $role (a=$a)")
-
-        hline!(p, [μ[a]],
-            color=c,
-            linewidth=1.5,
-            linestyle=:dash,
-            label="μ $role (a=$a)")
-    end
-
-    plot_dir = joinpath(relpath(@__DIR__), "plots")
-    mkpath(plot_dir)
-    savefig(p, joinpath(plot_dir, "estimator_convergence.png"))
-    p
-end
+plot_estimator_convergence(μ̂_history, μ, a_max, a_min; output_dir=plot_dir)
 
 # ╔═╡ e252477d-9bf5-465f-a528-8c5084ed645b
-let
-    n = K .+ (0:T)
-    optimal_reward = n .* μ[a_max]
-    collected_reward = optimal_reward .- regret_history
-
-    reward_plot = plot(n, collected_reward,
-        label="UCB (observada)",
-        title="Recompensa acumulada",
-        ylabel="Recompensa acumulada",
-        color="#0072B2",
-        linewidth=2,
-        legend=:topleft
-    )
-
-    plot!(reward_plot, n, optimal_reward,
-        label="Siempre el mejor brazo (esperada)",
-        color=:black,
-        linestyle=:dash,
-        linewidth=2)
-
-    regret_plot = plot(n, pseudo_regret_history,
-        title="Costo esperado de las decisiones",
-        ylabel="Pseudo-regret acumulado",
-        color="#D55E00",
-        linewidth=2,
-        fillrange=0,
-        fillalpha=0.1,
-        legend=false)
-
-    p = plot(reward_plot, regret_plot,
-        layout=(2, 1),
-        link=:x,
-        xlabel="Tiradas totales (K + t)",
-        size=(900, 700),
-        margin=5 * Plots.mm,
-        dpi=180)
-
-    plot_dir = joinpath(relpath(@__DIR__), "plots")
-    mkpath(plot_dir)
-    savefig(p, joinpath(plot_dir, "acc_reward.png"))
-    p
-end
+plot_accumulated_reward(K, μ[a_max], regret_history, pseudo_regret_history;
+    output_dir=plot_dir)
 
 # ╔═╡ 793471c9-3a31-4a0e-be80-ab1019cb8574
 md"""
@@ -1490,7 +1411,7 @@ version = "1.13.0+0"
 
 # ╔═╡ Cell order:
 # ╟─e0713f09-95c1-4d1e-862e-ab6cee9dff50
-# ╠═2550fcee-da05-11f1-1349-05dd7588d36e
+# ╟─2550fcee-da05-11f1-1349-05dd7588d36e
 # ╟─369a0191-71b9-401b-989b-981c4f3264c9
 # ╟─c0502291-6074-481b-a962-4f326c2e5740
 # ╟─52c29f42-9895-4648-b36f-5c8b5a387c4f
