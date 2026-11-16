@@ -133,3 +133,12 @@ cota superior, pero a medida que acumulamos
 observaciones, la incertidumbre disminuye y los
 brazos subóptimos dejan de resultar competitivos.
 UCB alcanza el orden logarítmico óptimo del regret esperado \citep{lai1985asymptotically}, aunque nuestra cota no demuestra optimalidad de la constante principal.
+
+La elección de \(\delta\) modifica el radio de confianza y, por tanto, el incentivo a explorar:
+\[
+    r(n)=\sqrt{\frac{\log(2K(T+1))+\log(1/\delta)}{2n}}.
+\]
+\begin{itemize}
+    \item \textbf{Menor \(\delta\):} intervalos más anchos, mayor incentivo a elegir brazos poco visitados y garantía con mayor confianza.
+    \item \textbf{Mayor \(\delta\):} intervalos más estrechos; las medias empíricas pesan más en la decisión, pero admitimos mayor probabilidad de que fallen los intervalos.
+\end{itemize}
